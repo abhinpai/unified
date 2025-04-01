@@ -52,7 +52,7 @@ export default function WorkspaceLayout({
             </Breadcrumb>
           </div>
         </header>
-        <section>
+        <section className='px-4'>
           {children}
         </section>
       </SidebarInset>
