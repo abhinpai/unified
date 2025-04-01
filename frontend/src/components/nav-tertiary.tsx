@@ -6,24 +6,19 @@ import {
   SidebarMenuButton,
   SidebarMenuItem
 } from './ui/sidebar'
-import { LucideIcon } from 'lucide-react'
+import { ISidebar } from '@/types/ISidebar'
 
 export const NavTertiary = ({
-  items,
+  tertiaryNavItems,
+  className,
+  workspacePath: workspace_path,
   ...props
-}: {
-  title?: string
-  items: {
-    name: string
-    url: string
-    icon: LucideIcon
-  }[]
-} & React.ComponentPropsWithoutRef<typeof SidebarGroup>) => {
+}: ISidebar & React.ComponentPropsWithoutRef<typeof SidebarGroup>) => {
   return (
-    <SidebarGroup {...props}>
+    <SidebarGroup className={className}>
       <SidebarGroupContent>
         <SidebarMenu>
-          {items.map((item) => (
+          {tertiaryNavItems.map((item) => (
             <SidebarMenuItem key={item.name}>
               <SidebarMenuButton asChild>
                 <a href={item.url}>

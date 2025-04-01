@@ -1,18 +1,20 @@
+import { ISidebar } from '@/types/ISidebar'
 import {
   ArrowLeftRightIcon,
   CalculatorIcon,
   ClipboardListIcon,
   ComponentIcon,
   LayoutDashboardIcon,
-  PiggyBankIcon,
   SettingsIcon,
   SquareUserRoundIcon
 } from 'lucide-react'
 
-export const SIDEBAR_MONEY_MANAGER = {
+export const SIDEBAR_MONEY_MANAGER: ISidebar = {
+  workspace: 'Money Manager',
+  workspacePath: 'money-manager',
   primaryNavItemTitle: '',
   secondaryNavItemTitle: 'Foundational',
-  defaultRoute: "/dashboard",
+  defaultRoute: 'dashboard',
   primaryNavItems: [
     {
       title: 'Dashboard',
@@ -55,8 +57,8 @@ export const SIDEBAR_MONEY_MANAGER = {
       ]
     },
     {
-      title: 'Report',
-      url: '/report',
+      title: 'Reports',
+      url: '/reports',
       isRoot: false,
       icon: ClipboardListIcon,
       isActive: false
@@ -65,25 +67,29 @@ export const SIDEBAR_MONEY_MANAGER = {
   secondaryNavItems: [
     {
       name: 'Accounts',
-      url: '/account',
-      icon: SquareUserRoundIcon
+      url: '/accounts',
+      icon: SquareUserRoundIcon,
+      isActive: false
     },
     {
       name: 'Budget',
       url: '/budget',
-      icon: CalculatorIcon
+      icon: CalculatorIcon,
+      isActive: false
     },
     {
       name: 'Category',
       url: '/category',
-      icon: ComponentIcon
+      icon: ComponentIcon,
+      isActive: false
     }
   ],
   tertiaryNavItems: [
     {
       name: 'Settings',
       url: '/setting',
-      icon: SettingsIcon
+      icon: SettingsIcon,
+      isActive: false
     }
   ]
 }

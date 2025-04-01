@@ -20,7 +20,6 @@ export async function signIn(
   await new Promise((resolve) => setTimeout(resolve, 800))
 
   return true
-
   // In a real app, you would validate credentials against your backend
   if (email === 'user@example.com' && password === 'password') {
     // Store user in localStorage or cookies or context

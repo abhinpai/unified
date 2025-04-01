@@ -19,32 +19,20 @@ import {
 } from '@/components/ui/sidebar'
 import { buildWorkspaceRoute } from '@/lib/buildWorkspaceRoute'
 import { useParams } from 'next/navigation'
+import { ISidebar } from '@/types/ISidebar'
 
 export function NavPrimary({
-  items,
-  title
-}: {
-  title: string
-  items: {
-    isRoot?: boolean
-    title: string
-    url: string
-    icon?: LucideIcon
-    isActive?: boolean
-    items?: {
-      title: string
-      url: string
-    }[]
-  }[]
-}) {
+  workspacePath: workspace_path,
+  primaryNavItems,
+  primaryNavItemTitle,
+}: ISidebar) {
   const params = useParams()
-  const workspaceName = params['workspace'] as string
 
   return (
     <SidebarGroup>
-      {title && <SidebarGroupLabel>Platform</SidebarGroupLabel>}
+      {primaryNavItemTitle && <SidebarGroupLabel>Platform</SidebarGroupLabel>}
       <SidebarMenu>
-        {items.map((item) => (
+        {primaryNavItems.map((item) => (
           <Collapsible
             key={item.title}
             asChild
@@ -69,7 +57,7 @@ export function NavPrimary({
                   isActive={item.isActive}
                 >
                   {item.icon && <item.icon />}
-                  <a href={buildWorkspaceRoute(workspaceName, item.url)}>
+                  <a href={buildWorkspaceRoute(workspace_path, item.url)}>
                     <span>{item.title}</span>
                   </a>
                 </SidebarMenuButton>

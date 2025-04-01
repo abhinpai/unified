@@ -4,9 +4,11 @@ import {
 } from 'lucide-react'
 
 export const SIDEBAR_JOURNAL = {
+  workspace: 'Journals',
+  workspacePath: '/journals',
   primaryNavItemTitle: '',
   secondaryNavItemTitle: 'Foundational',
-  defaultRoute: "/notes",
+  defaultRoute: "notes",
   primaryNavItems: [
     {
       title: 'Notes',

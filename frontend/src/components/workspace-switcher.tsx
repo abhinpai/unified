@@ -25,7 +25,8 @@ export function WorkspaceSwitcher({
   workspaces: {
     name: string
     logo: React.ElementType
-    plan: string
+    plan: string,
+    path: string
   }[]
 }) {
   const { isMobile } = useSidebar()
@@ -36,10 +37,14 @@ export function WorkspaceSwitcher({
     return null
   }
 
-  const handleWorkspaceChange = (workspace: { name: string; logo: React.ElementType; plan: string }) => {
+  const handleWorkspaceChange = (workspace: {
+    name: string
+    logo: React.ElementType
+    plan: string
+    path: string
+  }) => {
     setActiveWorkspace(workspace)
-    // Navigate to the selected workspace
-    router.push(`/workspace/${workspace.name.toLowerCase()}`) // Adjust the URL format as needed
+    router.push(`/workspace/${workspace.path}`)
   }
 
   return (
@@ -55,7 +60,9 @@ export function WorkspaceSwitcher({
                 <activeWorkspace.logo className='size-4' />
               </div>
               <div className='grid flex-1 text-left text-sm leading-tight'>
-                <span className='truncate font-medium'>{activeWorkspace.name}</span>
+                <span className='truncate font-medium'>
+                  {activeWorkspace.name}
+                </span>
                 <span className='truncate text-xs'>{activeWorkspace.plan}</span>
               </div>
               <ChevronsUpDown className='ml-auto' />
