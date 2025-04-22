@@ -19,6 +19,7 @@ import { useAuth } from '@/hooks/useAuth'
 import { CreateAccountDTO } from '@/types/account'
 import { IAccount } from '@/types/IAccount'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 
@@ -48,10 +49,17 @@ interface AccountFormProps {
   account?: IAccount
   onSubmit: (data: CreateAccountDTO) => void
   onCancel: () => void
+  isLoading?: boolean
 }
 
-export function AccountForm({ account, onSubmit, onCancel }: AccountFormProps) {
+export function AccountForm({
+  account,
+  onSubmit,
+  onCancel,
+  isLoading
+}: AccountFormProps) {
   const { user } = useAuth()
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -64,22 +72,29 @@ export function AccountForm({ account, onSubmit, onCancel }: AccountFormProps) {
     }
   })
 
-  function handleSubmit(values: z.infer<typeof formSchema>) {
+  async function handleSubmit(values: z.infer<typeof formSchema>) {
     if (!user?.id) {
       console.error('User not authenticated')
       return
     }
 
-    const submitData: CreateAccountDTO = {
-      accountName: values.accountName,
-      accountNumber: values.accountNumber,
-      accountType: values.accountType,
-      currency: values.currency,
-      balance: values.balance,
-      user_id: user?.id || ''
-    }
+    if (isSubmitting) return
 
-    onSubmit(submitData)
+    try {
+      setIsSubmitting(true)
+      const submitData: CreateAccountDTO = {
+        accountName: values.accountName,
+        accountNumber: values.accountNumber,
+        accountType: values.accountType,
+        currency: values.currency,
+        balance: values.balance,
+        user_id: user?.id || ''
+      }
+
+      await onSubmit(submitData)
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -179,10 +194,17 @@ export function AccountForm({ account, onSubmit, onCancel }: AccountFormProps) {
           )}
         />
         <div className='flex justify-end space-x-2'>
-          <Button type='button' variant='outline' onClick={onCancel}>
+          <Button
+            type='button'
+            variant='outline'
+            onClick={onCancel}
+            disabled={isSubmitting || isLoading}
+          >
             Cancel
           </Button>
-          <Button type='submit'>{account ? 'Update' : 'Create'}</Button>
+          <Button type='submit' disabled={isSubmitting || isLoading}>
+            {account ? 'Update' : 'Create'}
+          </Button>
         </div>
       </form>
     </Form>

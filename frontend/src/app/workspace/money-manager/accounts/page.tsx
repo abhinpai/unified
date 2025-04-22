@@ -14,13 +14,16 @@ import { Button } from '@/components/ui/button'
 import { PageHeader } from '@/components/ui/page-header'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useAuth } from '@/hooks/useAuth'
-import { accountService } from '@/services/accountService'
+import { accountService } from '@/services/accounts/accountService'
+import { useCreateAccount } from '@/services/accounts/use-create-account'
+import { useEditAccount } from '@/services/accounts/use-edit-account'
+import { useGetAccounts } from '@/services/accounts/use-get-accounts'
 import { CreateAccountDTO } from '@/types/account'
 import { Currencies } from '@/types/Currencies.type'
 import { IAccount } from '@/types/IAccount'
 import { useEffect, useState } from 'react'
 import { AccountCard } from './_components/account-card'
-import { CreateAccountDialog } from './_components/create-account-dialog'
+import { AccountDialog } from './_components/account-dialog'
 
 class AccountTypes {
   static Saving = 'Saving'
@@ -33,38 +36,43 @@ class AccountTypes {
 
 const AccountPage = () => {
   const [selectedTab, setSelectedTab] = useState('all')
-  const [accounts, setAccounts] = useState<IAccount[]>([])
   const [dialogOpen, setDialogOpen] = useState(false)
   const [selectedAccount, setSelectedAccount] = useState<IAccount | undefined>()
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [accountToDelete, setAccountToDelete] = useState<string | null>(null)
   const { user } = useAuth()
 
-  useEffect(() => {
-    if (user?.id) {
-      loadAccounts()
-    }
-  }, [user?.id])
+  const { data: accounts, refetch: loadAccounts } = useGetAccounts(user!.id)
+  const {
+    mutate: editAccount,
+    isSuccess: isEditedAccountSuccessfully,
+    isPending: isEditing
+  } = useEditAccount()
+  const {
+    mutate: createAccount,
+    isSuccess: isCreatedAccountSuccessfully,
+    isPending: isCreating
+  } = useCreateAccount()
 
-  const loadAccounts = async () => {
-    try {
-      const data = await accountService.getAccounts(user!.id)
-      setAccounts(data)
-    } catch (error) {
-      console.error('Error loading accounts:', error)
+  useEffect(() => {
+    if (isEditedAccountSuccessfully || isCreatedAccountSuccessfully) {
+      setDialogOpen(false)
+      setSelectedAccount(undefined)
     }
-  }
+  }, [isEditedAccountSuccessfully, isCreatedAccountSuccessfully])
 
   const handleCreateAccount = async (data: CreateAccountDTO) => {
     try {
       if (selectedAccount) {
-        await accountService.updateAccount(selectedAccount.id, data)
+        editAccount({
+          accountId: selectedAccount.id,
+          payload: {
+            ...data
+          }
+        })
       } else {
-        await accountService.createAccount({ ...data })
+        createAccount({ ...data })
       }
-      setDialogOpen(false)
-      setSelectedAccount(undefined)
-      loadAccounts()
     } catch (error) {
       console.error('Error saving account:', error)
     }
@@ -92,10 +100,19 @@ const AccountPage = () => {
     setSelectedTab(value)
   }
 
+  const handleDialogClose = (open: boolean) => {
+    if (!open) {
+      setSelectedAccount(undefined)
+      setDialogOpen(false)
+    } else {
+      setDialogOpen(true)
+    }
+  }
+
   const filteredAccounts =
     selectedTab === 'all'
       ? accounts
-      : accounts.filter((account) => account.accountType === selectedTab)
+      : accounts?.filter((account) => account.accountType === selectedTab)
 
   return (
     <div>
@@ -124,34 +141,12 @@ const AccountPage = () => {
             <div className='@container/main flex flex-1 flex-col gap-2'>
               <div className='flex flex-col gap-4 py-4 md:gap-6 md:py-6'>
                 <div className='*:data-[slot=card]:shadow-xs @xl/main:grid-cols-2 @5xl/main:grid-cols-4 grid grid-cols-1 gap-4 *:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card'>
-                  {filteredAccounts.map((account) => (
-                    <AccountCard
-                      key={account.id}
-                      accountType={account.accountType}
-                      currency={account.currency as Currencies}
-                      accountNumber={account.accountNumber}
-                      accountName={account.accountName}
-                      balance={account.balance}
-                      lastTransactionDate={account.lastTransactionDate}
-                      onEdit={() => handleEditAccount(account)}
-                      onDelete={() => {
-                        setAccountToDelete(account.id)
-                        setDeleteDialogOpen(true)
-                      }}
-                    />
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        </TabsContent>
-        {Object.values(AccountTypes).map((type) => (
-          <TabsContent value={type} key={type}>
-            <div className='flex flex-1 flex-col'>
-              <div className='@container/main flex flex-1 flex-col gap-2'>
-                <div className='flex flex-col gap-4 py-4 md:gap-6 md:py-6'>
-                  <div className='*:data-[slot=card]:shadow-xs @xl/main:grid-cols-2 @5xl/main:grid-cols-4 grid grid-cols-1 gap-4 *:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card'>
-                    {filteredAccounts.map((account) => (
+                  {filteredAccounts?.length === 0 ? (
+                    <div>
+                      <p>No accounts found!</p>
+                    </div>
+                  ) : (
+                    filteredAccounts?.map((account) => (
                       <AccountCard
                         key={account.id}
                         accountType={account.accountType}
@@ -166,7 +161,47 @@ const AccountPage = () => {
                           setDeleteDialogOpen(true)
                         }}
                       />
-                    ))}
+                    ))
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        </TabsContent>
+        {Object.values(AccountTypes).map((type) => (
+          <TabsContent value={type} key={type}>
+            <div className='flex flex-1 flex-col'>
+              <div className='@container/main flex flex-1 flex-col gap-2'>
+                <div className='flex flex-col gap-4 py-4 md:gap-6 md:py-6'>
+                  <div
+                    className={
+                      filteredAccounts?.length === 0
+                        ? ''
+                        : '*:data-[slot=card]:shadow-xs @xl/main:grid-cols-2 @5xl/main:grid-cols-4 grid grid-cols-1 gap-4 *:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card'
+                    }
+                  >
+                    {filteredAccounts?.length === 0 ? (
+                      <div className='p-4 w-full rounded bg-red-50 h-16 flex items-center'>
+                        <span>No accounts found!</span>
+                      </div>
+                    ) : (
+                      filteredAccounts?.map((account) => (
+                        <AccountCard
+                          key={account.id}
+                          accountType={account.accountType}
+                          currency={account.currency as Currencies}
+                          accountNumber={account.accountNumber}
+                          accountName={account.accountName}
+                          balance={account.balance}
+                          lastTransactionDate={account.lastTransactionDate}
+                          onEdit={() => handleEditAccount(account)}
+                          onDelete={() => {
+                            setAccountToDelete(account.id)
+                            setDeleteDialogOpen(true)
+                          }}
+                        />
+                      ))
+                    )}
                   </div>
                 </div>
               </div>
@@ -175,11 +210,12 @@ const AccountPage = () => {
         ))}
       </Tabs>
 
-      <CreateAccountDialog
+      <AccountDialog
         open={dialogOpen}
-        onOpenChange={setDialogOpen}
+        onOpenChange={handleDialogClose}
         account={selectedAccount}
         onSubmit={handleCreateAccount}
+        isLoading={isEditing || isCreating}
       />
 
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
@@ -193,7 +229,10 @@ const AccountPage = () => {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleDeleteAccount}>
+            <AlertDialogAction
+              className='!bg-red-800'
+              onClick={handleDeleteAccount}
+            >
               Delete
             </AlertDialogAction>
           </AlertDialogFooter>
