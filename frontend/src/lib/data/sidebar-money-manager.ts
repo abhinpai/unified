@@ -20,8 +20,7 @@ export const SIDEBAR_MONEY_MANAGER: ISidebar = {
       title: 'Dashboard',
       isRoot: true,
       url: '/dashboard',
-      icon: LayoutDashboardIcon,
-      isActive: true
+      icon: LayoutDashboardIcon
     },
     {
       title: 'Transaction',
@@ -31,28 +30,23 @@ export const SIDEBAR_MONEY_MANAGER: ISidebar = {
       items: [
         {
           title: 'Incomes',
-          url: '/transaction/income',
-          isActive: false
+          url: '/transaction/income'
         },
         {
           title: 'Expenses',
-          url: '/transaction/expenses',
-          isActive: false
+          url: '/transaction/expenses'
         },
         {
           title: 'Investments',
-          url: '/transaction/investment',
-          isActive: false
+          url: '/transaction/investment'
         },
         {
           title: 'Subscriptions',
-          url: '/transaction/subscriptions',
-          isActive: false
+          url: '/transaction/subscriptions'
         },
         {
           title: 'Transfer',
-          url: '/transaction/transfer',
-          isActive: false
+          url: '/transaction/transfer'
         }
       ]
     },
@@ -60,36 +54,31 @@ export const SIDEBAR_MONEY_MANAGER: ISidebar = {
       title: 'Reports',
       url: '/reports',
       isRoot: false,
-      icon: ClipboardListIcon,
-      isActive: false
+      icon: ClipboardListIcon
     }
   ],
   secondaryNavItems: [
     {
       name: 'Accounts',
       url: '/accounts',
-      icon: SquareUserRoundIcon,
-      isActive: false
+      icon: SquareUserRoundIcon
     },
     {
       name: 'Budget',
       url: '/budget',
-      icon: CalculatorIcon,
-      isActive: false
+      icon: CalculatorIcon
     },
     {
       name: 'Category',
       url: '/category',
-      icon: ComponentIcon,
-      isActive: false
+      icon: ComponentIcon
     }
   ],
   tertiaryNavItems: [
     {
       name: 'Settings',
       url: '/setting',
-      icon: SettingsIcon,
-      isActive: false
+      icon: SettingsIcon
     }
   ]
 }

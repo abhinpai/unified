@@ -3,7 +3,6 @@ export interface NavItem {
   isRoot?: boolean
   url: string
   icon?: React.ComponentType
-  isActive?: boolean
   items?: NavItem[]
 }
 
@@ -11,14 +10,12 @@ export interface SecondaryNavItem {
   name: string
   url: string
   icon: React.ComponentType
-  isActive?: boolean
 }
 
 export interface TertiaryNavItem {
   name: string
   url: string
   icon: React.ComponentType
-  isActive?: boolean
 }
 
 export interface ISidebar {

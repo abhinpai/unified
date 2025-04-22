@@ -1,6 +1,7 @@
 'use client'
 
-import { ChevronRight, type LucideIcon } from 'lucide-react'
+import { ChevronRight } from 'lucide-react'
+import { usePathname } from 'next/navigation'
 
 import {
   Collapsible,
@@ -18,15 +19,23 @@ import {
   SidebarMenuSubItem
 } from '@/components/ui/sidebar'
 import { buildWorkspaceRoute } from '@/lib/buildWorkspaceRoute'
-import { useParams } from 'next/navigation'
 import { ISidebar } from '@/types/ISidebar'
 
 export function NavPrimary({
   workspacePath: workspace_path,
   primaryNavItems,
-  primaryNavItemTitle,
+  primaryNavItemTitle
 }: ISidebar) {
-  const params = useParams()
+  const pathname = usePathname()
+
+  const isItemActive = (itemUrl: string) => {
+    const fullUrl = buildWorkspaceRoute(workspace_path, itemUrl)
+    return pathname === fullUrl
+  }
+
+  const isSubItemActive = (subItemUrl: string) => {
+    return pathname === subItemUrl
+  }
 
   return (
     <SidebarGroup>
@@ -36,7 +45,9 @@ export function NavPrimary({
           <Collapsible
             key={item.title}
             asChild
-            defaultOpen={item.isActive}
+            defaultOpen={item.items?.some((subItem) =>
+              isSubItemActive(subItem.url)
+            )}
             className='group/collapsible'
           >
             <SidebarMenuItem>
@@ -44,7 +55,9 @@ export function NavPrimary({
                 <CollapsibleTrigger asChild>
                   <SidebarMenuButton
                     tooltip={item.title}
-                    isActive={item.isActive}
+                    isActive={item.items.some((subItem) =>
+                      isSubItemActive(subItem.url)
+                    )}
                   >
                     {item.icon && <item.icon />}
                     <span>{item.title}</span>
@@ -54,7 +67,7 @@ export function NavPrimary({
               ) : (
                 <SidebarMenuButton
                   tooltip={item.title}
-                  isActive={item.isActive}
+                  isActive={isItemActive(item.url)}
                 >
                   {item.icon && <item.icon />}
                   <a href={buildWorkspaceRoute(workspace_path, item.url)}>

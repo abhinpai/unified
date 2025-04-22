@@ -7,7 +7,7 @@ import {
 } from '@/components/ui/dialog'
 import { CreateAccountDTO } from '@/types/account'
 import { IAccount } from '@/types/IAccount'
-import { useEffect } from 'react'
+import { AccountForm } from './account-form'
 
 interface AccountDialogProps {
   open: boolean
@@ -24,19 +24,17 @@ export function AccountDialog({
   onSubmit,
   isLoading
 }: AccountDialogProps) {
-  // Cleanup when dialog closes
-  useEffect(() => {
-    if (!open) {
-      // Reset form state when dialog closes
-      const form = document.querySelector('form')
-      if (form) {
-        form.reset()
-      }
+  const handleOpenChange = (newOpen: boolean) => {
+    if (!newOpen) {
+      // Ensure we clean up any pending state before closing
+      onOpenChange(false)
+    } else {
+      onOpenChange(true)
     }
-  }, [open])
+  }
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={handleOpenChange} modal>
       <DialogContent className='sm:max-w-[425px]'>
         <DialogHeader>
           <DialogTitle>
@@ -51,7 +49,7 @@ export function AccountDialog({
         <AccountForm
           account={account}
           onSubmit={onSubmit}
-          onCancel={() => onOpenChange(false)}
+          onCancel={() => handleOpenChange(false)}
           isLoading={isLoading}
         />
       </DialogContent>

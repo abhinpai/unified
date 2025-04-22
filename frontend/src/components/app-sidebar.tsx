@@ -5,27 +5,25 @@ import * as React from 'react'
 import { NavPrimary } from '@/components/nav-primary'
 import { NavSecondary } from '@/components/nav-secondary'
 import { NavUser } from '@/components/nav-user'
-import { WorkspaceSwitcher } from '@/components/workspace-switcher'
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
-  SidebarMenuButton,
-  SidebarMenuItem,
   SidebarRail
 } from '@/components/ui/sidebar'
-import { useParams } from 'next/navigation'
+import { WorkspaceSwitcher } from '@/components/workspace-switcher'
 import {
   WORKSPACE_JOURNAL,
   WORKSPACE_MONEY_MANAGER
 } from '@/lib/constants/constants'
-import { SIDEBAR_MONEY_MANAGER } from '@/lib/data/sidebar-money-manager'
-import { WORKSPACES } from '@/lib/data/workspaces'
-import { SIDEBAR_USER } from '@/lib/data/sidebar-user'
-import { NavTertiary } from './nav-tertiary'
 import { SIDEBAR_JOURNAL } from '@/lib/data/sidebar-journal'
+import { SIDEBAR_MONEY_MANAGER } from '@/lib/data/sidebar-money-manager'
+import { SIDEBAR_USER } from '@/lib/data/sidebar-user'
+import { WORKSPACES } from '@/lib/data/workspaces'
 import { ISidebar } from '@/types/ISidebar'
+import { useParams } from 'next/navigation'
+import { NavTertiary } from './nav-tertiary'
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const param = useParams()
