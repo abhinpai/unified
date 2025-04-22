@@ -1,77 +1,98 @@
 import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle
 } from '@/components/ui/card'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu'
+import { getIndicatorColor } from '@/lib/get-account-indicator-color'
+import { Currencies } from '@/types/Currencies.type'
+import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react'
 
-export type Currencies = 'USD' | 'INR' | 'EUR'
-
-interface AccountCardProps {
+export interface AccountCardProps {
   accountType: string
   currency: Currencies
   accountNumber: string
   accountName: string
-  balance: string
+  balance: number
   lastTransactionDate: string
+  onEdit?: () => void
+  onDelete?: () => void
 }
 
-export const AccountCard = ({
+export function AccountCard({
   accountType,
+  currency,
   accountNumber,
   accountName,
   balance,
-  currency,
-  lastTransactionDate
-}: AccountCardProps) => {
-  const getIndicatorColor = () => {
-    switch (accountType) {
-      case 'Saving':
-        return 'bg-green-700'
-      case 'Checking':
-        return 'bg-blue-700'
-      case 'Credit Card':
-        return 'bg-red-700'
-      case 'Debit Card':
-        return 'bg-yellow-700'
-      case 'Investment':
-        return 'bg-purple-700'
-      case 'Loan/Debt':
-        return 'bg-orange-700'
-      default:
-        return 'bg-gray-700'
-    }
-  }
-
+  lastTransactionDate,
+  onEdit,
+  onDelete
+}: AccountCardProps) {
   return (
     <Card className='@container/card gap-2'>
-      <CardHeader className='relative'>
-        <CardDescription className='flex items-center justify-between'>
+      <CardHeader className=' relative'>
+        <div className='flex flex-row items-center justify-between space-y-0 pb-2'>
           <Badge variant='outline'>
-            <span className={`w-2 h-2 rounded ${getIndicatorColor()}`}></span>
+            <span
+              className={`w-2 h-2 rounded ${getIndicatorColor(accountType)}`}
+            ></span>
             {accountType}
           </Badge>
-          <Badge variant='outline'>{currency}</Badge>
-        </CardDescription>
-        <CardTitle className='@[250px]/card:text-xl text-md font-semibold tabular-nums'>
-          {accountName}
-        </CardTitle>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant='ghost' className='h-8 w-8 p-0'>
+                <MoreHorizontal className='h-4 w-4' />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align='end'>
+              <DropdownMenuItem onClick={onEdit}>
+                <Pencil className='mr-2 h-4 w-4' />
+                Edit
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={onDelete} className='text-destructive'>
+                <Trash2 className='mr-2 h-4 w-4' />
+                Delete
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+        <div>
+          <CardTitle className='@[250px]/card:text-xl text-md font-semibold tabular-nums flex items-center gap-2'>
+            {accountName}
+            <Badge variant='outline'>{currency}</Badge>
+          </CardTitle>
+        </div>
       </CardHeader>
       <CardContent>
         <div className='line-clamp-1 flex gap-2 font-medium'>
           <p>{accountNumber}</p>
         </div>
-      </CardContent>
-      <CardFooter className='flex-col items-start gap-1 text-sm'>
-        <h2 className='font-bold @[250px]/card:text-3xl text-2xl py-3'>
+        <h2 className='font-bold @[250px]/card:text-4xl text-3xl py-3'>
           {balance}
         </h2>
-        <div className='text-muted-foreground'>
-          Last Transaction At: {lastTransactionDate}
-        </div>
+      </CardContent>
+      <CardFooter>
+        <p className='text-xs text-muted-foreground'>
+          Last transaction:{' '}
+          {new Date(lastTransactionDate).toLocaleString(undefined, {
+            year: 'numeric',
+            month: '2-digit',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+          })}
+        </p>
       </CardFooter>
     </Card>
   )

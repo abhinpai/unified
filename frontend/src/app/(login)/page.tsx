@@ -3,10 +3,10 @@
 import { GalleryVerticalEnd } from 'lucide-react'
 
 import { LoginForm } from '@/components/login-form'
-import { signIn } from '@/services/auth'
-import { redirect, useRouter } from 'next/navigation'
-import { useState } from 'react'
 import { WORKSPACE_MONEY_MANAGER } from '@/lib/constants/constants'
+import { signIn } from '@/services/auth'
+import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 
 interface LoginForm {
   email: string

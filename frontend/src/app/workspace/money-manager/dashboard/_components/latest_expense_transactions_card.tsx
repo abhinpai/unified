@@ -11,7 +11,7 @@ export const LatestExpenseTransactionsCard: React.FC<
     <Card className={`@container/card ${classNames}`}>
       <CardHeader className='relative'>
         <CardTitle className='font-semibold tabular-nums gap-1'>
-          Latest Expense Transactions
+          Latest Expenses
         </CardTitle>
       </CardHeader>
 
