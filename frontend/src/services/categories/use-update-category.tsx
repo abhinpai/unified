@@ -4,11 +4,16 @@ import { categoryService } from './categoryService'
 
 export const useUpdateCategory = () => {
   const queryClient = useQueryClient()
-  
+
   return useMutation({
     mutationKey: ['updateCategory'],
-    mutationFn: async ({ id, data }: { id: number; data: Partial<CreateCategoryDTO> }) =>
-      await categoryService.updateCategory(id, data),
+    mutationFn: async ({
+      id,
+      payload
+    }: {
+      id: number
+      payload: Partial<CreateCategoryDTO>
+    }) => await categoryService.updateCategory(id, payload),
     onSuccess: () =>
       queryClient.invalidateQueries({ queryKey: ['categories'] }),
     onError: (error) => {
