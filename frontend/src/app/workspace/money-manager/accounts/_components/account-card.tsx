@@ -16,6 +16,7 @@ import {
 import { getIndicatorColor } from '@/lib/get-account-indicator-color'
 import { Currencies } from '@/types/Currencies.type'
 import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react'
+import { useState } from 'react'
 
 export interface AccountCardProps {
   accountType: string
@@ -38,6 +39,22 @@ export function AccountCard({
   onEdit,
   onDelete
 }: AccountCardProps) {
+  const [dropdownOpen, setDropdownOpen] = useState(false)
+
+  const handleEdit = (e: any) => {
+    // Prevent event bubbling
+    e.stopPropagation()
+    setDropdownOpen(false)
+    onEdit && onEdit()
+  }
+
+  const handleDelete = (e: any) => {
+    // Prevent event bubbling
+    e.stopPropagation()
+    setDropdownOpen(false)
+    onDelete && onDelete()
+  }
+
   return (
     <Card className='@container/card gap-2'>
       <CardHeader className=' relative'>
@@ -48,18 +65,21 @@ export function AccountCard({
             ></span>
             {accountType}
           </Badge>
-          <DropdownMenu>
+          <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
             <DropdownMenuTrigger asChild>
               <Button variant='ghost' className='h-8 w-8 p-0'>
                 <MoreHorizontal className='h-4 w-4' />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align='end'>
-              <DropdownMenuItem onClick={onEdit}>
+              <DropdownMenuItem onClick={handleEdit}>
                 <Pencil className='mr-2 h-4 w-4' />
                 Edit
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={onDelete} className='text-destructive'>
+              <DropdownMenuItem
+                onClick={handleDelete}
+                className='text-destructive'
+              >
                 <Trash2 className='mr-2 h-4 w-4' />
                 Delete
               </DropdownMenuItem>
