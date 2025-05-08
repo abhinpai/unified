@@ -18,7 +18,7 @@ export const SIDEBAR_JOURNAL = {
   tertiaryNavItems: [
     {
       name: 'Settings',
-      url: '/setting',
+      url: '/settings',
       icon: SettingsIcon
     }
   ]

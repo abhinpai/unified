@@ -1,5 +1,6 @@
 'use client'
 
+import { LoadingCard } from '@/components/loading-card'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -42,7 +43,12 @@ const AccountPage = () => {
   const [accountToDelete, setAccountToDelete] = useState<string | null>(null)
   const { user } = useAuth()
 
-  const { data: accounts, refetch: loadAccounts } = useGetAccounts(user!.id)
+  const {
+    data: accounts,
+    refetch: loadAccounts,
+    isLoading
+  } = useGetAccounts(user!.id)
+
   const {
     mutate: editAccount,
     isSuccess: isEditedAccountSuccessfully,
@@ -141,7 +147,11 @@ const AccountPage = () => {
             <div className='@container/main flex flex-1 flex-col gap-2'>
               <div className='flex flex-col gap-4 py-4 md:gap-6 md:py-6'>
                 <div className='*:data-[slot=card]:shadow-xs @xl/main:grid-cols-2 @5xl/main:grid-cols-4 grid grid-cols-1 gap-4 *:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card'>
-                  {filteredAccounts?.length === 0 ? (
+                  {isLoading ? (
+                    Array(5)
+                      .fill(1)
+                      .map((_, index) => <LoadingCard key={index} />)
+                  ) : filteredAccounts?.length === 0 ? (
                     <div>
                       <p>No accounts found!</p>
                     </div>
@@ -180,7 +190,11 @@ const AccountPage = () => {
                         : '*:data-[slot=card]:shadow-xs @xl/main:grid-cols-2 @5xl/main:grid-cols-4 grid grid-cols-1 gap-4 *:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card'
                     }
                   >
-                    {filteredAccounts?.length === 0 ? (
+                    {isLoading ? (
+                      Array(5)
+                        .fill(1)
+                        .map((_, index) => <LoadingCard key={index} />)
+                    ) : filteredAccounts?.length === 0 ? (
                       <div className='p-4 w-full rounded bg-red-50 h-16 flex items-center'>
                         <span>No accounts found!</span>
                       </div>

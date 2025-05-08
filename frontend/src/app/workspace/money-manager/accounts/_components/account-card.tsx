@@ -57,7 +57,7 @@ export function AccountCard({
 
   return (
     <Card className='@container/card gap-2'>
-      <CardHeader className=' relative'>
+      <CardHeader className='relative'>
         <div className='flex flex-row items-center justify-between space-y-0 pb-2'>
           <Badge variant='outline'>
             <span

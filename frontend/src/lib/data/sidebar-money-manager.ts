@@ -24,7 +24,7 @@ export const SIDEBAR_MONEY_MANAGER: ISidebar = {
     },
     {
       title: 'Transaction',
-      isRoot: true,
+      isRoot: false,
       url: '/transaction',
       icon: ArrowLeftRightIcon,
       items: [
@@ -77,7 +77,7 @@ export const SIDEBAR_MONEY_MANAGER: ISidebar = {
   tertiaryNavItems: [
     {
       name: 'Settings',
-      url: '/setting',
+      url: '/settings',
       icon: SettingsIcon
     }
   ]
