@@ -60,7 +60,13 @@ export function NavPrimary({
                     )}
                   >
                     {item.icon && <item.icon />}
-                    <span>{item.title}</span>
+                    {!item.isRoot ? (
+                      <a href={buildWorkspaceRoute(workspace_path, item.url)}>
+                        <span>{item.title}</span>
+                      </a>
+                    ) : (
+                      <span>{item.title}</span>
+                    )}
                     <ChevronRight className='ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90' />
                   </SidebarMenuButton>
                 </CollapsibleTrigger>
@@ -80,7 +86,7 @@ export function NavPrimary({
                   {item.items?.map((subItem) => (
                     <SidebarMenuSubItem key={subItem.title}>
                       <SidebarMenuSubButton asChild>
-                        <a href={subItem.url}>
+                        <a href={buildWorkspaceRoute(workspace_path, subItem.url)}>
                           <span>{subItem.title}</span>
                         </a>
                       </SidebarMenuSubButton>

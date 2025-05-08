@@ -1,0 +1,22 @@
+Add a feature to Add a new transactions
+
+The dialog should have Transaction types: Expense, Income, Investment, Subscription and Transafer
+
+When user select Expenses following field should appear
+name, amount, account, currency determine based on the selected account  by default US, datetime, category dropdown
+
+When user select Income following field should appear
+amount, account, datetime
+
+When user select Investment following field should appear
+name, amount, account, datetime, description
+
+When user select Subscription following field should appear
+name, amount, account, currency determine based on the selected account  by default US, datetime, category dropdown,
+
+When user select Subscription following field should appear
+name, From Account, To account, Amount, date
+
+All new components add under _components. 
+
+Also provide Supabase SQL code to create a transaction table to satisfy above feature. Implement all these using Shadcn UI efficienctly 

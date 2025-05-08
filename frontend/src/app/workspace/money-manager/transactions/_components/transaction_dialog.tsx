@@ -5,25 +5,21 @@ import {
   DialogHeader,
   DialogTitle
 } from '@/components/ui/dialog'
-import { CreateCategoryDTO } from '@/types/category'
-import { ICategory } from '@/types/ICategory'
-import { CategoryForm } from './category-form'
+import { TransactionForm } from './transaction_form'
 
-interface CategoryDialogProps {
+interface TransactionDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
-  category?: ICategory
-  onSubmit: (data: CreateCategoryDTO) => void
+  onSubmit: () => void
   isLoading?: boolean
 }
 
-export function CategoryDialog({
+export function TransactionDialog({
   open,
   onOpenChange,
-  category,
   onSubmit,
   isLoading
-}: CategoryDialogProps) {
+}: TransactionDialogProps) {
   const handleOpenChange = (newOpen: boolean) => {
     if (!newOpen) {
       // Ensure we clean up any pending state before closing
@@ -38,16 +34,15 @@ export function CategoryDialog({
       <DialogContent className='sm:max-w-[425px]'>
         <DialogHeader>
           <DialogTitle>
-            {category ? 'Edit Category' : 'Add New Category'}
+            {false ? 'Edit Transaction' : 'Add New Transaction'}
           </DialogTitle>
           <DialogDescription>
-            {category
+            {false
               ? 'Make changes to your category here.'
-              : 'Fill in the details to add a category.'}
+              : 'Fill in the details to add a Transaction.'}
           </DialogDescription>
         </DialogHeader>
-        <CategoryForm
-          category={category}
+        <TransactionForm
           onSubmit={onSubmit}
           onCancel={() => handleOpenChange(false)}
           isLoading={isLoading}

@@ -23,9 +23,9 @@ export const SIDEBAR_MONEY_MANAGER: ISidebar = {
       icon: LayoutDashboardIcon
     },
     {
-      title: 'Transaction',
+      title: 'Transactions',
       isRoot: false,
-      url: '/transaction',
+      url: '/transactions',
       icon: ArrowLeftRightIcon,
       items: [
         {
