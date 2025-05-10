@@ -11,7 +11,7 @@ export const useEditAccount = () => {
       accountId,
       payload
     }: {
-      accountId: string
+      accountId: number
       payload: UpdateAccountDTO
     }) => await accountService.updateAccount(accountId, payload),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['accounts'] }),

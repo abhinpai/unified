@@ -1,3 +1,5 @@
+import { ICurrency } from "./ICurrency"
+
 export class AccountTypes {
   static Saving = 'Saving'
   static Checking = 'Checking'
@@ -8,9 +10,9 @@ export class AccountTypes {
 }
 
 export interface IAccount {
-  id: string
+  id: number
   accountType: string
-  currency: string
+  currency: ICurrency
   accountNumber: string
   accountName: string
   balance: number

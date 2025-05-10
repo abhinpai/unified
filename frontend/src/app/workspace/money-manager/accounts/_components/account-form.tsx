@@ -16,6 +16,7 @@ import {
   SelectValue
 } from '@/components/ui/select'
 import { useAuth } from '@/hooks/useAuth'
+import { useGetCurrencies } from '@/services/currency/use-get-currencies'
 import { CreateAccountDTO } from '@/types/account'
 import { IAccount } from '@/types/IAccount'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -33,7 +34,7 @@ const formSchema = z.object({
   accountType: z.string({
     required_error: 'Please select an account type.'
   }),
-  currency: z.string({
+  currency_id: z.coerce.number({
     required_error: 'Please select a currency.'
   }),
   balance: z
@@ -67,10 +68,11 @@ export function AccountForm({
       accountName: account?.accountName || '',
       accountNumber: account?.accountNumber || '',
       accountType: account?.accountType || '',
-      currency: account?.currency || '',
-      balance: account?.balance || 0
+      currency_id: account?.currency.id || 1
     }
   })
+
+  const { data: currencies } = useGetCurrencies()
 
   async function handleSubmit(values: z.infer<typeof formSchema>) {
     if (!user?.id) {
@@ -86,7 +88,7 @@ export function AccountForm({
         accountName: values.accountName,
         accountNumber: values.accountNumber,
         accountType: values.accountType,
-        currency: values.currency,
+        currency_id: values.currency_id,
         balance: values.balance,
         user_id: user?.id || ''
       }
@@ -153,19 +155,28 @@ export function AccountForm({
         />
         <FormField
           control={form.control}
-          name='currency'
+          name='currency_id'
           render={({ field }) => (
             <FormItem>
               <FormLabel>Currency</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <Select
+                onValueChange={field.onChange}
+                defaultValue={field.value.toString()}
+              >
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue placeholder='Select currency' />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value='USD'>USD</SelectItem>
-                  <SelectItem value='INR'>INR</SelectItem>
+                  {currencies?.map((currency) => (
+                    <SelectItem
+                      key={currency.id}
+                      value={currency.id.toString()}
+                    >
+                      {currency.name}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
               <FormMessage />

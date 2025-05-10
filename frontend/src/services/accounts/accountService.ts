@@ -7,7 +7,12 @@ export const accountService = {
     try {
       const { data, error } = await supabase
         .from('accounts')
-        .select('*')
+        .select(
+          `
+          *,
+          currencies:currency_id (*)
+        `
+        )
         .eq('user_id', userId)
         .order('created_at', { ascending: false })
 
@@ -15,7 +20,14 @@ export const accountService = {
         console.error('Error fetching accounts:', error)
         throw error
       }
-      return data || []
+      // Map data to properly format the currency field
+      const formattedAccounts =
+        data?.map((account) => ({
+          ...account,
+          currency: account.currencies
+        })) || []
+
+      return formattedAccounts
     } catch (error) {
       console.error('Error in getAccounts:', error)
       throw error
@@ -61,7 +73,7 @@ export const accountService = {
   },
 
   async updateAccount(
-    id: string,
+    id: number,
     updates: UpdateAccountDTO
   ): Promise<IAccount> {
     try {
@@ -83,7 +95,7 @@ export const accountService = {
     }
   },
 
-  async deleteAccount(id: string): Promise<void> {
+  async deleteAccount(id: number): Promise<void> {
     try {
       const { error } = await supabase.from('accounts').delete().eq('id', id)
 

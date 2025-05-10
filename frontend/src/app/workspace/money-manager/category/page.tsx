@@ -18,6 +18,7 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import { PageHeader } from '@/components/ui/page-header'
+import { Skeleton } from '@/components/ui/skeleton'
 import {
   Table,
   TableBody,
@@ -116,7 +117,8 @@ export default function CategoryPage() {
 
   const [deleteId, setDeleteId] = useState<number | null>(null)
 
-  const { data: categories = [] } = useGetCategories(user?.id || '')
+  const { data: categories = [], isLoading: isLoadingCategories } =
+    useGetCategories(user?.id || '')
   const createCategory = useCreateCategory()
   const updateCategory = useUpdateCategory()
   const deleteCategory = useDeleteCategory()
@@ -174,10 +176,9 @@ export default function CategoryPage() {
 
   return (
     <div>
-      <PageHeader
-        title='Categories'
-        children={<Button onClick={() => setDialogOpen(true)}>Add</Button>}
-      />
+      <PageHeader title='Categories'>
+        <Button onClick={() => setDialogOpen(true)}>Add</Button>
+      </PageHeader>
       <div className='rounded-md border  my-4'>
         <Table>
           <TableHeader className='bg-muted'>
@@ -199,7 +200,30 @@ export default function CategoryPage() {
             ))}
           </TableHeader>
           <TableBody>
-            {table.getRowModel().rows?.length ? (
+            {isLoadingCategories ? (
+              Array(5)
+                .fill(0)
+                .map((_, index) => (
+                  <TableRow key={index}>
+                    {Array(3)
+                      .fill(0)
+                      .map((_, cellIndex) => (
+                        <TableCell key={cellIndex}>
+                          <Skeleton className='h-5 w-full' />
+                        </TableCell>
+                      ))}
+                  </TableRow>
+                ))
+            ) : categories.length === 0 ? (
+              <TableRow>
+                <TableCell
+                  colSpan={6}
+                  className='text-center py-6 text-muted-foreground'
+                >
+                  No categories found. Create one by clicking &quot;Add &quot;.
+                </TableCell>
+              </TableRow>
+            ) : (
               table.getRowModel().rows.map((row) => (
                 <TableRow key={row.id}>
                   {row.getVisibleCells().map((cell) => (
@@ -212,12 +236,6 @@ export default function CategoryPage() {
                   ))}
                 </TableRow>
               ))
-            ) : (
-              <TableRow>
-                <TableCell colSpan={3} className='h-24 text-center'>
-                  No results.
-                </TableCell>
-              </TableRow>
             )}
           </TableBody>
         </Table>
@@ -234,7 +252,9 @@ export default function CategoryPage() {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleDelete}>Delete</AlertDialogAction>
+            <AlertDialogAction className='!bg-red-800' onClick={handleDelete}>
+              Delete
+            </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

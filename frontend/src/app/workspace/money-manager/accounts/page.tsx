@@ -40,7 +40,7 @@ const AccountPage = () => {
   const [dialogOpen, setDialogOpen] = useState(false)
   const [selectedAccount, setSelectedAccount] = useState<IAccount | undefined>()
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
-  const [accountToDelete, setAccountToDelete] = useState<string | null>(null)
+  const [accountToDelete, setAccountToDelete] = useState<number | null>(null)
   const { user } = useAuth()
 
   const {
@@ -122,10 +122,9 @@ const AccountPage = () => {
 
   return (
     <div>
-      <PageHeader
-        title='Accounts'
-        children={<Button onClick={() => setDialogOpen(true)}>Add</Button>}
-      />
+      <PageHeader title='TransAccountsctions'>
+        <Button onClick={() => setDialogOpen(true)}>Add</Button>
+      </PageHeader>
 
       <Tabs defaultValue={selectedTab} className='mt-6'>
         <TabsList>
@@ -160,7 +159,7 @@ const AccountPage = () => {
                       <AccountCard
                         key={account.id}
                         accountType={account.accountType}
-                        currency={account.currency as Currencies}
+                        currency={account.currency.name as Currencies}
                         accountNumber={account.accountNumber}
                         accountName={account.accountName}
                         balance={account.balance}
@@ -203,7 +202,7 @@ const AccountPage = () => {
                         <AccountCard
                           key={account.id}
                           accountType={account.accountType}
-                          currency={account.currency as Currencies}
+                          currency={account.currency.name as Currencies}
                           accountNumber={account.accountNumber}
                           accountName={account.accountName}
                           balance={account.balance}

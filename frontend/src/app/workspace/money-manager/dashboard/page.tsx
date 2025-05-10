@@ -13,15 +13,14 @@ const DashboardPage = () => {
     <div>
       <PageHeader
         title='Dashboard'
-        children={
-          <div className='flex gap-4'>
-            <DatePickerWithRange />
-            <Button className=''>Add</Button>
-          </div>
-        }
         alertTitle='Welcome to your dashboard'
         alertContent='Here you can find all your financial information at a glance. Use the filters to customize your view and get the most out of your data.'
-      />
+      >
+        <div className='flex gap-4'>
+          <DatePickerWithRange />
+          <Button className=''>Add</Button>
+        </div>
+      </PageHeader>
       <div className='flex flex-1 flex-col'>
         <div className='@container/main flex flex-1 flex-col gap-2'>
           <div className='flex flex-col gap-4 py-4 md:gap-6 md:py-6'>
@@ -61,9 +60,7 @@ const DashboardPage = () => {
       </div>
       <div className='grid grid-cols-4 grid-flow-col gap-4'>
         <MoneyStatChart classNames='col-span-3' />
-        <LatestExpenseTransactionsCard
-          classNames='col-span-1'
-        />
+        <LatestExpenseTransactionsCard classNames='col-span-1' />
       </div>
     </div>
   )

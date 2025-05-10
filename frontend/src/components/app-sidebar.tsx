@@ -18,14 +18,11 @@ import { SIDEBAR_MONEY_MANAGER } from '@/lib/data/sidebar-money-manager'
 import { SIDEBAR_USER } from '@/lib/data/sidebar-user'
 import { WORKSPACES } from '@/lib/data/workspaces'
 import { ISidebar } from '@/types/ISidebar'
-import { useParams, usePathname } from 'next/navigation'
+import { usePathname } from 'next/navigation'
 import { NavTertiary } from './nav-tertiary'
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const param = useParams()
   const pathname = usePathname()
-
-  console.log(pathname)
 
   const getNavItems = (): ISidebar => {
     if (pathname.includes(SIDEBAR_MONEY_MANAGER.workspacePath))
